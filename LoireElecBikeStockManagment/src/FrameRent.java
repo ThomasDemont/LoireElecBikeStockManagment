@@ -124,7 +124,7 @@ public class FrameRent extends JFrame{
 		gbc_bikeList.gridy = 2;
 		frameRent.getContentPane().add(bikeList, gbc_bikeList);
 		
-		JLabel totalAvailable = new JLabel(" Total Available");
+		JLabel totalAvailable = new JLabel(" Total Available bikes : ");
 		GridBagConstraints gbc_totalAvailable = new GridBagConstraints();
 		gbc_totalAvailable.anchor = GridBagConstraints.WEST;
 		gbc_totalAvailable.fill = GridBagConstraints.VERTICAL;
@@ -133,7 +133,7 @@ public class FrameRent extends JFrame{
 		gbc_totalAvailable.gridy = 2;
 		frameRent.getContentPane().add(totalAvailable, gbc_totalAvailable);
 		
-		JLabel total = new JLabel(" Total");
+		JLabel total = new JLabel(" Total bikes : ");
 		total.setHorizontalAlignment(SwingConstants.TRAILING);
 		GridBagConstraints gbc_total = new GridBagConstraints();
 		gbc_total.anchor = GridBagConstraints.NORTHWEST;
@@ -142,7 +142,7 @@ public class FrameRent extends JFrame{
 		gbc_total.gridy = 3;
 		frameRent.getContentPane().add(total, gbc_total);
 		
-		JButton btnAdd = new JButton("Add");
+		JButton btnAdd = new JButton("Add bike");
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.anchor = GridBagConstraints.WEST;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
@@ -150,7 +150,7 @@ public class FrameRent extends JFrame{
 		gbc_btnAdd.gridy = 4;
 		frameRent.getContentPane().add(btnAdd, gbc_btnAdd);
 			
-		JButton btnRemove = new JButton("Remove");
+		JButton btnRemove = new JButton("Remove bike");
 		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
 		gbc_btnRemove.anchor = GridBagConstraints.WEST;
 		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
@@ -158,7 +158,7 @@ public class FrameRent extends JFrame{
 		gbc_btnRemove.gridy = 5;
 		frameRent.getContentPane().add(btnRemove, gbc_btnRemove);
 		
-		JButton btnChangeStatus = new JButton("Change Status");
+		JButton btnChangeStatus = new JButton("Change bike Status");
 		GridBagConstraints gbc_btnChangeStatus = new GridBagConstraints();
 		gbc_btnChangeStatus.anchor = GridBagConstraints.WEST;
 		gbc_btnChangeStatus.insets = new Insets(0, 0, 0, 6);

@@ -84,14 +84,14 @@ public class FrameShop extends JFrame {
 		contentPane.add(searchFieldShop, gbc_searchFieldShop);
 		searchFieldShop.setColumns(10);
 		
-		JButton btnAdd = new JButton("Add");
+		JButton btnAdd = new JButton("Add article");
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
 		gbc_btnAdd.gridx = 0;
 		gbc_btnAdd.gridy = 2;
 		contentPane.add(btnAdd, gbc_btnAdd);
 		
-		JButton btnRemove = new JButton("Remove");
+		JButton btnRemove = new JButton("Remove article");
 		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
 		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRemove.gridx = 0;
