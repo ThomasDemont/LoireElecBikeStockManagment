@@ -15,10 +15,18 @@ import javax.swing.border.EmptyBorder;
 public class FrameAddArticle extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;//TODO Change names and add or remove additional text fields
-	private JTextField textField_1;
-	private JTextField textField_2;
-
+	DBConnection database;
+	private JTextField textFieldIdArticle;
+	private JTextField textFieldNameArticle;
+	private JTextField textFieldQuantityArticle;
+	
+	private static final String  driver = "jdbc:sqlserver://localhost:1433";;
+    private static final String  databaseName = ";databaseName=Bikes";
+	private static String  userName = ";user=sa";
+    private static String password = ";password=azerty";
+    
+    
+    private static final String URL =  driver + databaseName + userName + password;
 	/**
 	 * Launch the application
 	 */
@@ -54,35 +62,35 @@ public class FrameAddArticle extends JFrame {
 		/**
 		 * Initialization of widgets
 		 */
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 0;
-		gbc_textField.gridy = 0;
-		contentPane.add(textField, gbc_textField);
-		textField.setColumns(10);
+		textFieldIdArticle = new JTextField();
+		GridBagConstraints gbc_textFieldIdArticle = new GridBagConstraints();
+		gbc_textFieldIdArticle.gridwidth = 2;
+		gbc_textFieldIdArticle.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldIdArticle.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldIdArticle.gridx = 0;
+		gbc_textFieldIdArticle.gridy = 0;
+		contentPane.add(textFieldIdArticle, gbc_textFieldIdArticle);
+		textFieldIdArticle.setColumns(10);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.gridwidth = 2;
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 0;
-		gbc_textField_1.gridy = 1;
-		contentPane.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		textFieldNameArticle = new JTextField();
+		GridBagConstraints gbc_textFieldNameArticle = new GridBagConstraints();
+		gbc_textFieldNameArticle.gridwidth = 2;
+		gbc_textFieldNameArticle.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldNameArticle.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldNameArticle.gridx = 0;
+		gbc_textFieldNameArticle.gridy = 1;
+		contentPane.add(textFieldNameArticle, gbc_textFieldNameArticle);
+		textFieldNameArticle.setColumns(10);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.gridwidth = 2;
-		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 0;
-		gbc_textField_2.gridy = 2;
-		contentPane.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		textFieldQuantityArticle = new JTextField();
+		GridBagConstraints gbc_textFieldQuantityArticle = new GridBagConstraints();
+		gbc_textFieldQuantityArticle.gridwidth = 2;
+		gbc_textFieldQuantityArticle.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldQuantityArticle.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldQuantityArticle.gridx = 0;
+		gbc_textFieldQuantityArticle.gridy = 2;
+		contentPane.add(textFieldQuantityArticle, gbc_textFieldQuantityArticle);
+		textFieldQuantityArticle.setColumns(10);
 		
 		JButton btnOk = new JButton("OK");
 		GridBagConstraints gbc_btnOk = new GridBagConstraints();
@@ -102,9 +110,6 @@ public class FrameAddArticle extends JFrame {
 		 */
 		btnOk.addActionListener(new ButtonListener());
 		btnCancel.addActionListener(new ButtonListener());
-		textField.addActionListener(new TextFieldListener());
-		textField_1.addActionListener(new TextFieldListener());
-		textField_2.addActionListener(new TextFieldListener());
 	}
 	
 	/**
@@ -120,8 +125,12 @@ public class FrameAddArticle extends JFrame {
 		{
 			if(e.getActionCommand() == "OK")
 			{
+				Integer iDArticle = Integer.parseInt(textFieldIdArticle.getText());
+				String nameArticle = textFieldNameArticle.getText();
+				Integer quantityArticle = Integer.parseInt(textFieldQuantityArticle.getText());
+				
+				database.addArticle(URL, userName, password, iDArticle, nameArticle, quantityArticle);
 				FrameAddArticle.this.dispose();
-				//TODO add to database
 			}
 			if(e.getActionCommand() == "Cancel")
 			{ 
@@ -129,34 +138,5 @@ public class FrameAddArticle extends JFrame {
 			}
 		}
 	}
-	
-	/**
-	 *Class that will handle the events for TextField action
-	 */
-	private class TextFieldListener implements ActionListener
-	{
-		/**
-		 * Differentiation for events is done with the source object of the event
-		 */
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			//TODO query a SELECT accordingly + add action for each text field
-			//System.out.println(textSearchField);
-			if(e.getSource() == textField)
-			{
-				
-			}
-			if(e.getSource() == textField_1)
-			{
-				
-			}
-			if(e.getSource() == textField_2)
-			{
-				
-			}
-		}
-	}
-
 
 }

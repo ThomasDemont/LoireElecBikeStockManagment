@@ -17,9 +17,16 @@ import javax.swing.JButton;
 public class FrameAddBike extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textFieldID;
+	private DBConnection database;
+	
+	private static final String  driver = "jdbc:sqlserver://localhost:1433";;
+    private static final String  databaseName = ";databaseName=Bikes";
+	private static String  userName = ";user=sa";
+    private static String password = ";password=azerty";
+    
+    
+    private static final String URL =  driver + databaseName + userName + password;
 
 	/**
 	 * Launch the application
@@ -55,35 +62,15 @@ public class FrameAddBike extends JFrame {
 		/**
 		 * Initialization of widgets
 		 */
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 0;
-		gbc_textField.gridy = 0;
-		contentPane.add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.gridwidth = 2;
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 0;
-		gbc_textField_1.gridy = 1;
-		contentPane.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
-		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.gridwidth = 2;
-		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 0;
-		gbc_textField_2.gridy = 2;
-		contentPane.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		textFieldID = new JTextField();
+		GridBagConstraints gbc_textFieldID = new GridBagConstraints();
+		gbc_textFieldID.gridwidth = 2;
+		gbc_textFieldID.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldID.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldID.gridx = 0;
+		gbc_textFieldID.gridy = 0;
+		contentPane.add(textFieldID, gbc_textFieldID);
+		textFieldID.setColumns(10);
 		
 		JButton btnOk = new JButton("OK");
 		GridBagConstraints gbc_btnOk = new GridBagConstraints();
@@ -119,8 +106,9 @@ public class FrameAddBike extends JFrame {
 		{
 			if(e.getActionCommand() == "OK")
 			{
+				database.addBikes(URL, userName, password, Integer.parseInt(textFieldID.getText()));
 				FrameAddBike.this.dispose();
-				//TODO add to database
+				
 			}
 			if(e.getActionCommand() == "Cancel")
 			{ 

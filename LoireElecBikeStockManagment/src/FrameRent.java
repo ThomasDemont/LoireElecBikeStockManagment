@@ -13,30 +13,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
-import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.awt.event.ItemEvent;
 
 public class FrameRent extends JFrame{
 
 	private JFrame frameRent;
+	private DBConnection database;
 	private JTextField searchField;
 	private JButton btnFrameRent;
 	private JButton btnFrameShop;
-	private JComboBox sort;
-	private JComboBox status;
-	private JLabel totalReserved;
+	private JButton btnUpdateList;
+	private JCheckBox checkBoxAvailability;
 	private JList bikeList;
 	private JLabel total;
-	private JLabel totalAvailable;
 	private JButton btnAdd;
 	private JButton btnRemove;
 	private JButton btnChangeStatus;
+	
+	private static final String  driver = "jdbc:sqlserver://localhost:1433";;
+    private static final String  databaseName = ";databaseName=Bikes";
+	private static String  userName = ";user=sa";
+    private static String password = ";password=azerty";
+    
+    
+    private static final String URL =  driver + databaseName + userName + password;
 	
 
 	/**
@@ -98,17 +106,14 @@ public class FrameRent extends JFrame{
 		frameRent.getContentPane().add(searchField, gbc_searchField);
 		searchField.setColumns(10);
 		
-		String[] sortListContent = {"Alphabetical", "Stock"};
-		JComboBox sortComboBox = new JComboBox(sortListContent);
-		sortComboBox.setToolTipText("Sort");
-		GridBagConstraints gbc_sortComboBox = new GridBagConstraints();
-		gbc_sortComboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_sortComboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_sortComboBox.gridx = 1;
-		gbc_sortComboBox.gridy = 1;
-		frameRent.getContentPane().add(sortComboBox, gbc_sortComboBox);
+		JButton btnUpdateList = new JButton("Update List");
+		GridBagConstraints gbc_btnUpdateList = new GridBagConstraints();
+		gbc_btnUpdateList.insets = new Insets(0, 0, 5, 5);
+		gbc_btnUpdateList.gridx = 1;
+		gbc_btnUpdateList.gridy = 1;
+		frameRent.getContentPane().add(btnUpdateList, gbc_btnUpdateList);
 		
-		JCheckBox checkBoxAvailability = new JCheckBox("List non available :");
+		JCheckBox checkBoxAvailability = new JCheckBox("List only available :");
 		GridBagConstraints gbc_checkBoxAvailability = new GridBagConstraints();
 		gbc_checkBoxAvailability.insets = new Insets(0, 0, 5, 0);
 		gbc_checkBoxAvailability.gridx = 2;
@@ -122,18 +127,16 @@ public class FrameRent extends JFrame{
 		gbc_bikeList.fill = GridBagConstraints.BOTH;
 		gbc_bikeList.gridx = 1;
 		gbc_bikeList.gridy = 2;
+		DefaultListModel listModel = new DefaultListModel();
+		ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+		for(int i = 0; i < listOfBike.size(); i++)
+		{
+			listModel.addElement(listOfBike.get(i));
+		}
+		bikeList.setModel(listModel);
 		frameRent.getContentPane().add(bikeList, gbc_bikeList);
 		
-		JLabel totalAvailable = new JLabel(" Total Available bikes : ");
-		GridBagConstraints gbc_totalAvailable = new GridBagConstraints();
-		gbc_totalAvailable.anchor = GridBagConstraints.WEST;
-		gbc_totalAvailable.fill = GridBagConstraints.VERTICAL;
-		gbc_totalAvailable.insets = new Insets(0, 0, 5, 5);
-		gbc_totalAvailable.gridx = 0;
-		gbc_totalAvailable.gridy = 2;
-		frameRent.getContentPane().add(totalAvailable, gbc_totalAvailable);
-		
-		JLabel total = new JLabel(" Total bikes : ");
+		JLabel total = new JLabel(" Total bikes : " + database.countBikes(URL, userName, password));
 		total.setHorizontalAlignment(SwingConstants.TRAILING);
 		GridBagConstraints gbc_total = new GridBagConstraints();
 		gbc_total.anchor = GridBagConstraints.NORTHWEST;
@@ -185,31 +188,29 @@ public class FrameRent extends JFrame{
 				
 			}
 		});		
-		sortComboBox.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent e)
-			{
-				if(sortComboBox.getSelectedIndex() == 0)
-				{
-					//TODO Sort alphabetically
-				}
-				if(sortComboBox.getSelectedIndex() == 1)
-				{
-					//TODO Sort By stock amount
-				}
-			}
-		});	
 		checkBoxAvailability.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
 				if(e.getStateChange() == ItemEvent.SELECTED)
 				{
-					//TODO Change bikeList to display all bikes
+					DefaultListModel listModel = new DefaultListModel();
+					ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+					for(int i = 0; i < listOfBike.size(); i++)
+					{
+						listModel.addElement(listOfBike.get(i));
+					}
+					bikeList.setModel(listModel);
 				}
 				else
 				{
-					//TODO Change bikeList to display only available bikes
+					DefaultListModel listModel = new DefaultListModel();
+					ArrayList<String> listOfBike = database.listBikesA(URL, userName, password);
+					for(int i = 0; i < listOfBike.size(); i++)
+					{
+						listModel.addElement(listOfBike.get(i));
+					}
+					bikeList.setModel(listModel);
 				}
 			}
 		});
@@ -232,19 +233,24 @@ public class FrameRent extends JFrame{
 				FrameShop frameShop = new FrameShop();
 				frameShop.setVisible(true);	
 			}
+			if(e.getActionCommand() == "Update List")
+			{
+				updateRentUi();
+			}
 			if(e.getActionCommand() == "Add")
 			{
 				FrameAddBike frameAddBike = new FrameAddBike();
 				frameAddBike.setVisible(true);
-				//TODO FrameAddBike + update listBike, Total
 			}
 			if(e.getActionCommand() == "Remove")
 			{
-				//TODO remove from the database with id + update listBike, Total
+				ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+				int idToRemove = Integer.parseInt(listOfBike.get(bikeList.getSelectedIndex()));
+				database.deleteBikes(URL, userName, password, idToRemove);
 			}
 			if(e.getActionCommand() == "Change Status")
 			{
-				//TODO change status into database  + update listBike, Total
+				//TODO change status into database
 			}			
 		}
 		
@@ -255,9 +261,14 @@ public class FrameRent extends JFrame{
 	 */
 	private void updateRentUi()
 	{
-		totalAvailable.setText(" Total Available bikes : "/* + query number of available bike*/);
-		total.setText(" Total bikes : "/* + query number of bike*/);
-		//TODO update listBike
+		total.setText(" Total bikes : " + database.countBikes(URL, userName, password));
+		DefaultListModel listModel = new DefaultListModel();
+		ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+		for(int i = 0; i < listOfBike.size(); i++)
+		{
+			listModel.addElement(listOfBike.get(i));
+		}
+		bikeList.setModel(listModel);
 	}
 
 }

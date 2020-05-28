@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -20,8 +22,19 @@ import javax.swing.JComboBox;
 public class FrameShop extends JFrame {
 
 	private JPanel contentPane;
+
+	private DBConnection database;
 	private JButton btnFrameRent;
 	private JTextField searchFieldShop;
+	private JList listArticle;
+	
+	private static final String  driver = "jdbc:sqlserver://localhost:1433";;
+    private static final String  databaseName = ";databaseName=Bikes";
+	private static String  userName = ";user=sa";
+    private static String password = ";password=azerty";
+    
+    
+    private static final String URL =  driver + databaseName + userName + password;
 
 	/**
 	 * Launch the application
@@ -65,15 +78,6 @@ public class FrameShop extends JFrame {
 		gbc_btnFrameRent.gridx = 0;
 		gbc_btnFrameRent.gridy = 0;
 		contentPane.add(btnFrameRent, gbc_btnFrameRent);
-
-		String[] sortListContent = {"Alphabetical", "Stock"};
-		JComboBox comboBoxSort = new JComboBox(sortListContent);
-		GridBagConstraints gbc_comboBoxSort = new GridBagConstraints();
-		gbc_comboBoxSort.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBoxSort.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBoxSort.gridx = 1;
-		gbc_comboBoxSort.gridy = 0;
-		contentPane.add(comboBoxSort, gbc_comboBoxSort);
 		
 		searchFieldShop = new JTextField();
 		GridBagConstraints gbc_searchFieldShop = new GridBagConstraints();
@@ -104,6 +108,13 @@ public class FrameShop extends JFrame {
 		gbc_listArticle.fill = GridBagConstraints.BOTH;
 		gbc_listArticle.gridx = 1;
 		gbc_listArticle.gridy = 1;
+		DefaultListModel listModel = new DefaultListModel();
+		ArrayList<String> listOfArticle = database.listShop(URL, userName, password);
+		for(int i = 0; i < listOfArticle.size(); i++)
+		{
+			listModel.addElement(listOfArticle.get(i));
+		}
+		listArticle.setModel(listModel);
 		contentPane.add(listArticle, gbc_listArticle);
 		
 		/**
@@ -118,23 +129,9 @@ public class FrameShop extends JFrame {
 			{
 				String textSearchField = new String("");
 				textSearchField = searchFieldShop.getText();
-				//TODO query a SELECT accordingly
+				database.searchShop(URL, userName, password, textSearchField);
 				//System.out.println(textSearchField);
 				
-			}
-		});
-		comboBoxSort.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent e)
-			{
-				if(comboBoxSort.getSelectedIndex() == 0)
-				{
-					//TODO Sort alphabetically
-				}
-				if(comboBoxSort.getSelectedIndex() == 1)
-				{
-					//TODO Sort By stock amount
-				}
 			}
 		});
 	}
@@ -164,7 +161,9 @@ public class FrameShop extends JFrame {
 			}
 			if(e.getActionCommand() == "Remove")
 			{
-				
+				ArrayList<String> listOfArticle = database.listShop(URL, userName, password);
+				int idToRemove = Integer.parseInt(listOfArticle.get(listArticle.getSelectedIndex()));
+				database.deleteShop(URL, userName, password, idToRemove);
 			}
 		}
 	}
