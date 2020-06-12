@@ -26,7 +26,7 @@ import java.awt.event.ItemEvent;
 public class FrameRent extends JFrame{
 
 	private JFrame frameRent;
-	private DBConnection database;
+	private ConnectionDB DB;
 	private JTextField searchField;
 	private JButton btnFrameRent;
 	private JButton btnFrameShop;
@@ -38,13 +38,12 @@ public class FrameRent extends JFrame{
 	private JButton btnRemove;
 	private JButton btnChangeStatus;
 	
-	private static final String  driver = "jdbc:sqlserver://hildur.ucn.dk";;//hildur.ucn.dk  jdbc:sqlserver://
-    private static final String  databaseName = ";databaseName=dmai0919_1081946";//dmai0919_1081946
-	private static String  userName = ";user=dmai0919_1081946";//dmai0919_1081946
-    private static String password = ";password=Password1";//Password1!
+	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
+	private static String  userName = "root";//dmai0919_1081946
+    private static String password = "";//Password1!
     
     
-    private static final String URL =  driver + databaseName + userName + password;
+    private static final String URL =  driver + userName + password;
 	
 
 	/**
@@ -54,6 +53,7 @@ public class FrameRent extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ConnectionDB DB = new ConnectionDB();
 					FrameRent window = new FrameRent();
 					window.frameRent.setVisible(true);
 				} catch (Exception e) {
@@ -128,7 +128,7 @@ public class FrameRent extends JFrame{
 		gbc_bikeList.gridx = 1;
 		gbc_bikeList.gridy = 2;
 		DefaultListModel listModel = new DefaultListModel();
-		ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
 			listModel.addElement(listOfBike.get(i));
@@ -136,7 +136,7 @@ public class FrameRent extends JFrame{
 		bikeList.setModel(listModel);
 		frameRent.getContentPane().add(bikeList, gbc_bikeList);
 		
-		JLabel total = new JLabel(" Total bikes : " + database.countBikes(URL, userName, password));
+		JLabel total = new JLabel(" Total bikes : " + DB.countBikes(URL, userName, password));
 		total.setHorizontalAlignment(SwingConstants.TRAILING);
 		GridBagConstraints gbc_total = new GridBagConstraints();
 		gbc_total.anchor = GridBagConstraints.NORTHWEST;
@@ -195,7 +195,7 @@ public class FrameRent extends JFrame{
 				if(e.getStateChange() == ItemEvent.SELECTED)
 				{
 					DefaultListModel listModel = new DefaultListModel();
-					ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+					ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModel.addElement(listOfBike.get(i));
@@ -205,7 +205,7 @@ public class FrameRent extends JFrame{
 				else
 				{
 					DefaultListModel listModel = new DefaultListModel();
-					ArrayList<String> listOfBike = database.listBikesA(URL, userName, password);
+					ArrayList<String> listOfBike = DB.listBikesAvailable(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModel.addElement(listOfBike.get(i));
@@ -245,13 +245,16 @@ public class FrameRent extends JFrame{
 			if(e.getActionCommand() == "Remove")
 			{
 				//TODO Currently doesn't work as it would need to only get the id to be able to remove whereas it currently gets all the item information
-				ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+				ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 				int idToRemove = Integer.parseInt(listOfBike.get(bikeList.getSelectedIndex()));
-				database.deleteBikes(URL, userName, password, idToRemove);
+				DB.deleteBikes(URL, userName, password, idToRemove);
 			}
 			if(e.getActionCommand() == "Change Status")
 			{
-				//TODO change status into database
+				ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
+				int idToChange = Integer.parseInt(listOfBike.get(bikeList.getSelectedIndex()));
+				//TODO check status with second list
+				//DB.changeBikesStatus(URL, userName, password, idToChange, status);
 			}			
 		}
 		
@@ -262,9 +265,9 @@ public class FrameRent extends JFrame{
 	 */
 	private void updateRentUi()
 	{
-		total.setText(" Total bikes : " + database.countBikes(URL, userName, password));
+		total.setText(" Total bikes : " + DB.countBikes(URL, userName, password));
 		DefaultListModel listModel = new DefaultListModel();
-		ArrayList<String> listOfBike = database.listBikes(URL, userName, password);
+		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
 			listModel.addElement(listOfBike.get(i));
