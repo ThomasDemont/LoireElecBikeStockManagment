@@ -62,7 +62,7 @@ public class ConnectionDB {
 	
 	public static ArrayList<String> listBikesAvailable(String urlString, String username, String password)
 	{
-    	ArrayList<String> listAvailableBikesString = null;
+		ArrayList<String> listAvailableBikesString = new ArrayList<String>();
 		/*
 		open a connection to database
 		getConnection(url,username,password);
@@ -73,7 +73,7 @@ public class ConnectionDB {
 		Statement statment = con.createStatement();
 	
 		//execute statement object and return result to ResultSet
-		ResultSet rs = statment.executeQuery("select * from bikes Where dbo.Bikes.Status_B LIKE true");
+		ResultSet rs = statment.executeQuery("select * from bikes Where bikes.statusBike LIKE true");
 		while (rs.next()) {
 			listAvailableBikesString.add(rs.getInt("id_Bike") + "\t");
 			

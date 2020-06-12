@@ -136,7 +136,7 @@ public class FrameRent extends JFrame{
 		bikeList.setModel(listModel);
 		frameRent.getContentPane().add(bikeList, gbc_bikeList);
 		
-		JLabel total = new JLabel(" Total bikes : " + DB.countBikes(URL, userName, password));
+		JLabel total = new JLabel(" Total bikes : " + listOfBike.size());
 		total.setHorizontalAlignment(SwingConstants.TRAILING);
 		GridBagConstraints gbc_total = new GridBagConstraints();
 		gbc_total.anchor = GridBagConstraints.NORTHWEST;
@@ -195,7 +195,7 @@ public class FrameRent extends JFrame{
 				if(e.getStateChange() == ItemEvent.SELECTED)
 				{
 					DefaultListModel listModel = new DefaultListModel();
-					ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
+					ArrayList<String> listOfBike = DB.listBikesAvailable(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModel.addElement(listOfBike.get(i));
@@ -205,7 +205,7 @@ public class FrameRent extends JFrame{
 				else
 				{
 					DefaultListModel listModel = new DefaultListModel();
-					ArrayList<String> listOfBike = DB.listBikesAvailable(URL, userName, password);
+					ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModel.addElement(listOfBike.get(i));
@@ -265,7 +265,6 @@ public class FrameRent extends JFrame{
 	 */
 	private void updateRentUi()
 	{
-		total.setText(" Total bikes : " + DB.countBikes(URL, userName, password));
 		DefaultListModel listModel = new DefaultListModel();
 		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 		for(int i = 0; i < listOfBike.size(); i++)
@@ -273,6 +272,7 @@ public class FrameRent extends JFrame{
 			listModel.addElement(listOfBike.get(i));
 		}
 		bikeList.setModel(listModel);
+		total.setText(" Total bikes : " + listOfBike.size());
 	}
 
 }
