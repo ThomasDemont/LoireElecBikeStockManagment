@@ -31,10 +31,8 @@ public class ConnectionDB {
 	public static ArrayList<String> listBikes(String urlString, String username, String password)
 	{
     	ArrayList<String> listBikesString = new ArrayList<String>();
-		/*
-		open a connection to database
-		getConnection(url,username,password);
-		 */
+
+		//open a connection to database
 		try(Connection con = DriverManager.getConnection(URL,user, pwd))
 		{
 		//create statement object
@@ -42,10 +40,9 @@ public class ConnectionDB {
 	
 		//execute statement object and return result to ResultSet
 		ResultSet rs = statment.executeQuery("select * from bikes");
-		while (rs.next()) {
-			listBikesString.add(rs.getInt("id_Bike") + "\t");
-			
-			System.out.print(rs.getInt("id_Bike") + "\t");
+		while (rs.next())
+		{
+			listBikesString.add(rs.getInt("id_Bike") + "\t");			
 		}
 	
 		//close the connection
@@ -58,6 +55,41 @@ public class ConnectionDB {
 		}
 	
 		return listBikesString;
+	}
+	
+	public static ArrayList<String> listBikesStatus(String urlString, String username, String password)
+	{
+    	ArrayList<String> listBikesStatusString = new ArrayList<String>();
+
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+		//create statement object
+		Statement statment = con.createStatement();
+	
+		//execute statement object and return result to ResultSet
+		ResultSet rs = statment.executeQuery("select * from bikes");
+		while (rs.next()) {
+			if(rs.getBoolean("statusBike") == true)
+			{
+				listBikesStatusString.add("Available");
+			}
+			if(rs.getBoolean("statusBike") == false)
+			{
+				listBikesStatusString.add("Taken");
+			}
+		}
+	
+		//close the connection
+		rs.close();
+		statment.close();
+		con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return listBikesStatusString;
 	}
 	
 	public static ArrayList<String> listBikesAvailable(String urlString, String username, String password)
@@ -90,6 +122,41 @@ public class ConnectionDB {
 		}
 	
 		return listAvailableBikesString;
+	}
+	
+	public static ArrayList<String> listBikesStatusAvailable(String urlString, String username, String password)
+	{
+    	ArrayList<String> listBikesStatusString = new ArrayList<String>();
+
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+		//create statement object
+		Statement statment = con.createStatement();
+	
+		//execute statement object and return result to ResultSet
+		ResultSet rs = statment.executeQuery("select * from bikes Where bikes.statusBike LIKE true");
+		while (rs.next()) {
+			if(rs.getBoolean("statusBike") == true)
+			{
+				listBikesStatusString.add("Available");
+			}
+			if(rs.getBoolean("statusBike") == false)
+			{
+				listBikesStatusString.add("Taken");
+			}
+		}
+	
+		//close the connection
+		rs.close();
+		statment.close();
+		con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return listBikesStatusString;
 	}
 	
 	public static int countBikes(String urlString, String username, String password)

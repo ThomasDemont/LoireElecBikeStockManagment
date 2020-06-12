@@ -81,7 +81,7 @@ public class FrameRent extends JFrame{
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0};
 		frameRent.getContentPane().setLayout(gridBagLayout);
 		frameRent.setTitle("LoireElecBikeStockManagment - Rent");
@@ -122,19 +122,36 @@ public class FrameRent extends JFrame{
 			
 		JList bikeList = new JList();
 		GridBagConstraints gbc_bikeList = new GridBagConstraints();
-		gbc_bikeList.gridwidth = 2;
+		gbc_bikeList.insets = new Insets(0, 0, 0, 5);
 		gbc_bikeList.gridheight = 5;
 		gbc_bikeList.fill = GridBagConstraints.BOTH;
 		gbc_bikeList.gridx = 1;
 		gbc_bikeList.gridy = 2;
-		DefaultListModel listModel = new DefaultListModel();
+		DefaultListModel listModelBike = new DefaultListModel();
 		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
-			listModel.addElement(listOfBike.get(i));
+			listModelBike.addElement(listOfBike.get(i));
 		}
-		bikeList.setModel(listModel);
+		bikeList.setModel(listModelBike);
 		frameRent.getContentPane().add(bikeList, gbc_bikeList);
+		
+		JList statusBikeList = new JList();
+		GridBagConstraints gbc_statusBikeList = new GridBagConstraints();
+		gbc_statusBikeList.gridheight = 5;
+		gbc_statusBikeList.insets = new Insets(0, 0, 5, 0);
+		gbc_statusBikeList.fill = GridBagConstraints.BOTH;
+		gbc_statusBikeList.gridx = 2;
+		gbc_statusBikeList.gridy = 2;
+		DefaultListModel listModelStatus = new DefaultListModel();
+		ArrayList<String> listOfBikeStatus = DB.listBikesStatus(URL, userName, password);
+		for(int i = 0; i < listOfBike.size(); i++)
+		{
+			listModelStatus.addElement(listOfBikeStatus.get(i));
+		}
+		statusBikeList.setModel(listModelStatus);
+		frameRent.getContentPane().add(statusBikeList, gbc_statusBikeList);
+		statusBikeList.setEnabled(false);
 		
 		JLabel total = new JLabel(" Total bikes : " + listOfBike.size());
 		total.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -176,7 +193,7 @@ public class FrameRent extends JFrame{
 		btnFrameShop.addActionListener(new ButtonListener());
 		btnAdd.addActionListener(new ButtonListener());
 		btnRemove.addActionListener(new ButtonListener());
-		btnChangeStatus.addActionListener(new ButtonListener());		
+		btnChangeStatus.addActionListener(new ButtonListener());
 		searchField.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -194,23 +211,31 @@ public class FrameRent extends JFrame{
 			{
 				if(e.getStateChange() == ItemEvent.SELECTED)
 				{
-					DefaultListModel listModel = new DefaultListModel();
+					DefaultListModel listModelId = new DefaultListModel();
+					DefaultListModel listModelStatus = new DefaultListModel();
 					ArrayList<String> listOfBike = DB.listBikesAvailable(URL, userName, password);
+					ArrayList<String> listOfBikeStatus = DB.listBikesStatusAvailable(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
-						listModel.addElement(listOfBike.get(i));
+						listModelId.addElement(listOfBike.get(i));
+						listModelStatus.addElement(listOfBikeStatus.get(i));
 					}
-					bikeList.setModel(listModel);
+					bikeList.setModel(listModelId);
+					statusBikeList.setModel(listModelStatus);
 				}
 				else
 				{
-					DefaultListModel listModel = new DefaultListModel();
+					DefaultListModel listModelId = new DefaultListModel();
+					DefaultListModel listModelStatus = new DefaultListModel();
 					ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
+					ArrayList<String> listOfBikeStatus = DB.listBikesStatus(URL, userName, password);
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
-						listModel.addElement(listOfBike.get(i));
+						listModelId.addElement(listOfBike.get(i));
+						listModelStatus.addElement(listOfBikeStatus.get(i));
 					}
-					bikeList.setModel(listModel);
+					bikeList.setModel(listModelId);
+					statusBikeList.setModel(listModelStatus);
 				}
 			}
 		});
