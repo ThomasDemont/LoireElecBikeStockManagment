@@ -20,13 +20,12 @@ public class FrameAddArticle extends JFrame {
 	private JTextField textFieldNameArticle;
 	private JTextField textFieldQuantityArticle;
 	
-	private static final String  driver = "jdbc:sqlserver://localhost:1433";;
-    private static final String  databaseName = ";databaseName=Bikes";
-	private static String  userName = ";user=sa";
-    private static String password = ";password=azerty";
+	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
+	private static String  userName = "root";//dmai0919_1081946
+    private static String password = "";//Password1!
     
     
-    private static final String URL =  driver + databaseName + userName + password;
+    private static final String URL =  driver + userName + password;
 	/**
 	 * Launch the application
 	 */

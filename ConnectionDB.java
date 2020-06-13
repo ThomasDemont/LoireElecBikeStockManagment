@@ -28,7 +28,7 @@ public class ConnectionDB {
 
 	}
 	
-	public static ArrayList<String> listBikes(String urlString, String username, String password)
+	public static ArrayList<String> listBikes()
 	{
     	ArrayList<String> listBikesString = new ArrayList<String>();
 
@@ -57,7 +57,7 @@ public class ConnectionDB {
 		return listBikesString;
 	}
 	
-	public static ArrayList<String> listBikesStatus(String urlString, String username, String password)
+	public static ArrayList<String> listBikesStatus()
 	{
     	ArrayList<String> listBikesStatusString = new ArrayList<String>();
 
@@ -92,7 +92,7 @@ public class ConnectionDB {
 		return listBikesStatusString;
 	}
 	
-	public static ArrayList<String> listBikesAvailable(String urlString, String username, String password)
+	public static ArrayList<String> listBikesAvailable()
 	{
 		ArrayList<String> listAvailableBikesString = new ArrayList<String>();
 		/*
@@ -124,7 +124,7 @@ public class ConnectionDB {
 		return listAvailableBikesString;
 	}
 	
-	public static ArrayList<String> listBikesStatusAvailable(String urlString, String username, String password)
+	public static ArrayList<String> listBikesStatusAvailable()
 	{
     	ArrayList<String> listBikesStatusString = new ArrayList<String>();
 
@@ -159,76 +159,111 @@ public class ConnectionDB {
 		return listBikesStatusString;
 	}
 	
-	public static int countBikes(String urlString, String username, String password)
-	{
-		int numberBike = 0;   	
-		try (Connection connection = DriverManager.getConnection(urlString, username, password)){
+    public static ArrayList<String> searchBike(String BikeId)
+    {
+    	ArrayList<String> listBikesSearchString = new ArrayList<String>();
 
-				Statement s = connection.createStatement();
-				ResultSet rs = s.executeQuery("select COUNT(dbo.Bikes.Id_B) AS 'Available/Taken' from dbo.Bikes GROUP BY dbo.Bikes.Status_B");
-				while (rs.next()) {
-					numberBike = rs.getInt("Available/Taken");
-					System.out.print(rs.getInt("Available/Taken") + "\t");
-
-				}
-				
-				rs.close();
-				s.close();
-				
-		} catch (SQLException e) {
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+			//create statement object
+			Statement statment = con.createStatement();
+			
+			//execute statement object and return result to ResultSet
+			ResultSet rs = statment.executeQuery("select * from bikes Where bikes.id_Bike LIKE " + BikeId);
+			while (rs.next())
+			{
+				listBikesSearchString.add(rs.getInt("id_Bike") + "\t");
+			}
+			//close the connection
+			rs.close();
+			statment.close();
+			con.close();
+		}
+		
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return numberBike;
+		return listBikesSearchString;
 	}
-	
-    public static void addBikes(String urlString, String username, String password, int ID) {
+    public static ArrayList<String> searchBikeStatus(String BikeId)
+    {
+    	ArrayList<String> listBikesSearchString = new ArrayList<String>();
+
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+			//create statement object
+			Statement statment = con.createStatement();
+			
+			//execute statement object and return result to ResultSet
+			ResultSet rs = statment.executeQuery("select * from bikes Where bikes.id_Bike LIKE " + BikeId);
+			while (rs.next())
+			{
+				if(rs.getInt("statusBike") == 1)
+				{
+					listBikesSearchString.add("Available");
+				}else listBikesSearchString.add("Taken");
+			}
+			//close the connection
+			rs.close();
+			statment.close();
+			con.close();
+		}
 		
-	try (Connection connection = DriverManager.getConnection(urlString, username, password)){
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listBikesSearchString;
+	}
+
+	
+    public static void addBikes(int ID) {
+		
+	try (Connection connection = DriverManager.getConnection(URL,user, pwd)){
 				
 		Statement s = connection.createStatement();
-		ResultSet rs = s.executeQuery("Insert Into dbo.Bikes values (" + ID + " , true");
-		rs.close();
-		s.close();
+		String sql = "INSERT INTO bikes VALUES (" + ID + " , true)";
+		int updateCount = s.executeUpdate(sql);
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
     
-    public static void deleteBikes(String urlString, String username, String password, int ID)
+    public static void deleteBikes(String ID)
     {	
-		try (Connection connection = DriverManager.getConnection(urlString, username, password)){				
+		try (Connection connection = DriverManager.getConnection(URL, user, pwd)){				
 				
 				Statement s = connection.createStatement();
-				ResultSet rs = s.executeQuery("Delete from dbo.Bikes Where dbo.Bikes.id_Bike = " + ID);
-				rs.close();
-				s.close();
+				
+				String sql = "DELETE FROM bikes WHERE bikes.id_Bike = " + ID;
+				int updateCount = s.executeUpdate(sql);				
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
     
-    public static void changeBikesStatus(String urlString, String username, String password, int ID, String status)
+    public static void changeBikesStatus(String ID, String status)
     {	
-		try (Connection connection = DriverManager.getConnection(urlString, username, password)){
+		try (Connection connection = DriverManager.getConnection(URL,user, pwd)){
 				
+				String sql ="";
 				Statement s = connection.createStatement();
-				if(status == "available")
+				if(status == "Available")
 				{
-					ResultSet rs = s.executeQuery("Update dbo.Bikes SET dbo.Bikes.Status_B = 'true' Where dbo.Bikes.Id_B = " + ID);
-					rs.close();
-					s.close();
-				}else { 			
-				ResultSet rs = s.executeQuery("Update dbo.Bikes SET dbo.Bikes.Status_B = 'false' Where dbo.Bikes.Id_B = " + ID);
-				rs.close();
-				s.close();
+					sql = "UPDATE bikes SET bikes.statusBike = '1' WHERE bikes.id_Bike = " + ID;
+				}else
+				{ 
+					sql = "UPDATE bikes SET bikes.statusBike = '0' WHERE bikes.id_Bike = " + ID;
 				}
+				int updateCount = s.executeUpdate(sql);
 
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+   
 }

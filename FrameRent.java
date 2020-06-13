@@ -33,6 +33,7 @@ public class FrameRent extends JFrame{
 	private JButton btnUpdateList;
 	private JCheckBox checkBoxAvailability;
 	private JList bikeList;
+	private JList statusBikeList;
 	private JLabel total;
 	private JButton btnAdd;
 	private JButton btnRemove;
@@ -128,7 +129,7 @@ public class FrameRent extends JFrame{
 		gbc_bikeList.gridx = 1;
 		gbc_bikeList.gridy = 2;
 		DefaultListModel listModelBike = new DefaultListModel();
-		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
+		ArrayList<String> listOfBike = ConnectionDB.listBikes();
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
 			listModelBike.addElement(listOfBike.get(i));
@@ -144,7 +145,7 @@ public class FrameRent extends JFrame{
 		gbc_statusBikeList.gridx = 2;
 		gbc_statusBikeList.gridy = 2;
 		DefaultListModel listModelStatus = new DefaultListModel();
-		ArrayList<String> listOfBikeStatus = DB.listBikesStatus(URL, userName, password);
+		ArrayList<String> listOfBikeStatus = ConnectionDB.listBikesStatus();
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
 			listModelStatus.addElement(listOfBikeStatus.get(i));
@@ -192,19 +193,66 @@ public class FrameRent extends JFrame{
 		 */
 		btnFrameShop.addActionListener(new ButtonListener());
 		btnAdd.addActionListener(new ButtonListener());
-		btnRemove.addActionListener(new ButtonListener());
-		btnChangeStatus.addActionListener(new ButtonListener());
+		btnRemove.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(e.getActionCommand() == "Remove bike")
+				{
+					ArrayList<String> listOfBike = ConnectionDB.listBikes();
+					String idToRemove = listOfBike.get(bikeList.getSelectedIndex());
+					ConnectionDB.deleteBikes(idToRemove);
+					bikeList.setModel(updatebikeList(ConnectionDB.listBikes()));
+					statusBikeList.setModel(updatestatusBikeList(ConnectionDB.listBikesStatus()));
+				}
+			}
+		});
+		btnUpdateList.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+
+				bikeList.setModel(updatebikeList(ConnectionDB.listBikes()));
+				statusBikeList.setModel(updatestatusBikeList(ConnectionDB.listBikesStatus()));					
+			}
+			
+		});
+		btnChangeStatus.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				ArrayList<String> listOfBike = ConnectionDB.listBikes();
+				String idToChange = listOfBike.get(bikeList.getSelectedIndex());
+				if(statusBikeList.getModel().getElementAt(bikeList.getSelectedIndex()) == "Available")
+				{
+					ConnectionDB.changeBikesStatus(idToChange, "Taken");
+				}
+				else
+				{
+					ConnectionDB.changeBikesStatus(idToChange, "Available");
+				}
+
+				bikeList.setModel(updatebikeList(ConnectionDB.listBikes()));
+				statusBikeList.setModel(updatestatusBikeList(ConnectionDB.listBikesStatus()));
+			}
+		});
 		searchField.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				String textSearchField = new String("");
 				textSearchField = searchField.getText();
-				//TODO query a SELECT accordingly
-				//System.out.println(textSearchField);
-				
+				ConnectionDB.searchBike(textSearchField);
+				System.out.println(textSearchField);
+				bikeList.setModel(updatebikeList(ConnectionDB.searchBike(textSearchField)));
+				statusBikeList.setModel(updatestatusBikeList(ConnectionDB.searchBikeStatus(textSearchField)));
 			}
-		});		
+		});
+		
 		checkBoxAvailability.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent e)
@@ -213,8 +261,8 @@ public class FrameRent extends JFrame{
 				{
 					DefaultListModel listModelId = new DefaultListModel();
 					DefaultListModel listModelStatus = new DefaultListModel();
-					ArrayList<String> listOfBike = DB.listBikesAvailable(URL, userName, password);
-					ArrayList<String> listOfBikeStatus = DB.listBikesStatusAvailable(URL, userName, password);
+					ArrayList<String> listOfBike = ConnectionDB.listBikesAvailable();
+					ArrayList<String> listOfBikeStatus = ConnectionDB.listBikesStatusAvailable();
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModelId.addElement(listOfBike.get(i));
@@ -227,8 +275,8 @@ public class FrameRent extends JFrame{
 				{
 					DefaultListModel listModelId = new DefaultListModel();
 					DefaultListModel listModelStatus = new DefaultListModel();
-					ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
-					ArrayList<String> listOfBikeStatus = DB.listBikesStatus(URL, userName, password);
+					ArrayList<String> listOfBike = ConnectionDB.listBikes();
+					ArrayList<String> listOfBikeStatus = ConnectionDB.listBikesStatus();
 					for(int i = 0; i < listOfBike.size(); i++)
 					{
 						listModelId.addElement(listOfBike.get(i));
@@ -256,48 +304,77 @@ public class FrameRent extends JFrame{
 			{
 				frameRent.dispose();
 				FrameShop frameShop = new FrameShop();
-				frameShop.setVisible(true);	
+				frameShop.setVisible(true);
 			}
-			if(e.getActionCommand() == "Update List")
-			{
-				updateRentUi();
-			}
-			if(e.getActionCommand() == "Add")
+			if(e.getActionCommand() == "Add bike")
 			{
 				FrameAddBike frameAddBike = new FrameAddBike();
 				frameAddBike.setVisible(true);
 			}
-			if(e.getActionCommand() == "Remove")
+			/*if(e.getActionCommand() == "Update List")
 			{
-				//TODO Currently doesn't work as it would need to only get the id to be able to remove whereas it currently gets all the item information
-				ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
-				int idToRemove = Integer.parseInt(listOfBike.get(bikeList.getSelectedIndex()));
-				DB.deleteBikes(URL, userName, password, idToRemove);
+				bikeList.setModel(updatebikeList());
+				statusBikeList.setModel(updatestatusBikeList());
 			}
-			if(e.getActionCommand() == "Change Status")
+			if(e.getActionCommand() == "Remove bike")
 			{
-				ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
-				int idToChange = Integer.parseInt(listOfBike.get(bikeList.getSelectedIndex()));
-				//TODO check status with second list
-				//DB.changeBikesStatus(URL, userName, password, idToChange, status);
-			}			
+				ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
+				String idToRemove = listOfBike.get(bikeList.getSelectedIndex());
+				ConnectionDB.deleteBikes(URL, userName, password, idToRemove);
+				bikeList.setModel(updatebikeList());
+				statusBikeList.setModel(updatestatusBikeList());
+			}
+			if(e.getActionCommand() == "Change bike Status")
+			{
+				ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
+				String idToChange = listOfBike.get(bikeList.getSelectedIndex());
+				if(statusBikeList.getModel().getElementAt(bikeList.getSelectedIndex()) == "Available")
+				{
+					ConnectionDB.changeBikesStatus(URL, userName, password, idToChange, "Taken");
+				}
+				else
+				{
+					ConnectionDB.changeBikesStatus(URL, userName, password, idToChange, "Available");
+				}
+				updateRentUi();
+			}*/			
 		}
 		
 	}
 	
 	/**
-	 * Method to update the UI
+	 * Methods to update the UI
 	 */
-	private void updateRentUi()
+	/*private void updateRentUi()
 	{
 		DefaultListModel listModel = new DefaultListModel();
-		ArrayList<String> listOfBike = DB.listBikes(URL, userName, password);
+		ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
 		for(int i = 0; i < listOfBike.size(); i++)
 		{
 			listModel.addElement(listOfBike.get(i));
 		}
 		bikeList.setModel(listModel);
 		total.setText(" Total bikes : " + listOfBike.size());
+	}*/
+	
+	private DefaultListModel updatebikeList(ArrayList<String> bikeList)
+	{
+		DefaultListModel listModel = new DefaultListModel();
+		for(int i = 0; i < bikeList.size(); i++)
+		{
+			listModel.addElement(bikeList.get(i));
+		}
+		return listModel;
+	}
+	
+	private DefaultListModel updatestatusBikeList(ArrayList<String> statusBikeList)
+	{
+		DefaultListModel listModel = new DefaultListModel();
+		for(int i = 0; i < statusBikeList.size(); i++)
+		{
+			listModel.addElement(statusBikeList.get(i));
+		}
+		return listModel;
 	}
 
 }

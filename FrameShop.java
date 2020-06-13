@@ -28,13 +28,12 @@ public class FrameShop extends JFrame {
 	private JTextField searchFieldShop;
 	private JList listArticle;
 	
-	private static final String  driver = "jdbc:sqlserver://hildur.ucn.dk";;//hildur.ucn.dk
-    private static final String  databaseName = ";databaseName=dmai0919_1081946";//dmai0919_1081946
-	private static String  userName = ";user=dmai0919_1081946";//dmai0919_1081946
-    private static String password = ";password=Password1";//Password1!
+	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
+	private static String  userName = "root";//dmai0919_1081946
+    private static String password = "";//Password1!
     
     
-    private static final String URL =  driver + databaseName + userName + password;
+    private static final String URL =  driver + userName + password;
 
 	/**
 	 * Launch the application

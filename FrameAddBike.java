@@ -18,15 +18,14 @@ public class FrameAddBike extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textFieldID;
-	private DBConnection database;
+	private ConnectionDB DB;
 	
-	private static final String  driver = "jdbc:sqlserver://hildur.ucn.dk";;//hildur.ucn.dk
-    private static final String  databaseName = ";databaseName=dmai0919_1081946";//dmai0919_1081946
-	private static String  userName = ";user=dmai0919_1081946";//dmai0919_1081946
-    private static String password = ";password=Password1";//Password1!
+	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
+	private static String  userName = "root";//dmai0919_1081946
+    private static String password = "";//Password1!
     
     
-    private static final String URL =  driver + databaseName + userName + password;
+    private static final String URL =  driver + userName + password;
 
 	/**
 	 * Launch the application
@@ -106,7 +105,7 @@ public class FrameAddBike extends JFrame {
 		{
 			if(e.getActionCommand() == "OK")
 			{
-				database.addBikes(URL, userName, password, Integer.parseInt(textFieldID.getText()));
+				DB.addBikes(Integer.parseInt(textFieldID.getText()));
 				FrameAddBike.this.dispose();
 				
 			}
