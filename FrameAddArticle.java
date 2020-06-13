@@ -15,17 +15,11 @@ import javax.swing.border.EmptyBorder;
 public class FrameAddArticle extends JFrame {
 
 	private JPanel contentPane;
-	DBConnection database;
+	ConnectionDB database;
 	private JTextField textFieldIdArticle;
 	private JTextField textFieldNameArticle;
 	private JTextField textFieldQuantityArticle;
 	
-	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
-	private static String  userName = "root";//dmai0919_1081946
-    private static String password = "";//Password1!
-    
-    
-    private static final String URL =  driver + userName + password;
 	/**
 	 * Launch the application
 	 */
@@ -68,6 +62,7 @@ public class FrameAddArticle extends JFrame {
 		gbc_textFieldIdArticle.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldIdArticle.gridx = 0;
 		gbc_textFieldIdArticle.gridy = 0;
+		textFieldIdArticle.setText("Id");
 		contentPane.add(textFieldIdArticle, gbc_textFieldIdArticle);
 		textFieldIdArticle.setColumns(10);
 		
@@ -78,18 +73,9 @@ public class FrameAddArticle extends JFrame {
 		gbc_textFieldNameArticle.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldNameArticle.gridx = 0;
 		gbc_textFieldNameArticle.gridy = 1;
+		textFieldNameArticle.setText("Name");	
 		contentPane.add(textFieldNameArticle, gbc_textFieldNameArticle);
 		textFieldNameArticle.setColumns(10);
-		
-		textFieldQuantityArticle = new JTextField();
-		GridBagConstraints gbc_textFieldQuantityArticle = new GridBagConstraints();
-		gbc_textFieldQuantityArticle.gridwidth = 2;
-		gbc_textFieldQuantityArticle.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldQuantityArticle.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldQuantityArticle.gridx = 0;
-		gbc_textFieldQuantityArticle.gridy = 2;
-		contentPane.add(textFieldQuantityArticle, gbc_textFieldQuantityArticle);
-		textFieldQuantityArticle.setColumns(10);
 		
 		JButton btnOk = new JButton("OK");
 		GridBagConstraints gbc_btnOk = new GridBagConstraints();
@@ -126,9 +112,8 @@ public class FrameAddArticle extends JFrame {
 			{
 				Integer iDArticle = Integer.parseInt(textFieldIdArticle.getText());
 				String nameArticle = textFieldNameArticle.getText();
-				Integer quantityArticle = Integer.parseInt(textFieldQuantityArticle.getText());
 				
-				database.addArticle(URL, userName, password, iDArticle, nameArticle, quantityArticle);
+				database.addArticle(iDArticle, nameArticle);
 				FrameAddArticle.this.dispose();
 			}
 			if(e.getActionCommand() == "Cancel")

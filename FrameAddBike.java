@@ -19,13 +19,6 @@ public class FrameAddBike extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldID;
 	private ConnectionDB DB;
-	
-	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
-	private static String  userName = "root";//dmai0919_1081946
-    private static String password = "";//Password1!
-    
-    
-    private static final String URL =  driver + userName + password;
 
 	/**
 	 * Launch the application
@@ -68,6 +61,7 @@ public class FrameAddBike extends JFrame {
 		gbc_textFieldID.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldID.gridx = 0;
 		gbc_textFieldID.gridy = 0;
+		textFieldID.setText("Id");
 		contentPane.add(textFieldID, gbc_textFieldID);
 		textFieldID.setColumns(10);
 		

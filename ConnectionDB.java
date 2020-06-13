@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -167,17 +168,17 @@ public class ConnectionDB {
 		try(Connection con = DriverManager.getConnection(URL,user, pwd))
 		{
 			//create statement object
-			Statement statment = con.createStatement();
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM bikes WHERE bikes.id_Bike LIKE ?");
+			stmt.setString(1, "%" + BikeId + "%");
+			ResultSet rs = stmt.executeQuery();
 			
 			//execute statement object and return result to ResultSet
-			ResultSet rs = statment.executeQuery("select * from bikes Where bikes.id_Bike LIKE " + BikeId);
 			while (rs.next())
 			{
 				listBikesSearchString.add(rs.getInt("id_Bike") + "\t");
 			}
 			//close the connection
 			rs.close();
-			statment.close();
 			con.close();
 		}
 		
@@ -194,10 +195,12 @@ public class ConnectionDB {
 		try(Connection con = DriverManager.getConnection(URL,user, pwd))
 		{
 			//create statement object
-			Statement statment = con.createStatement();
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM bikes WHERE bikes.id_Bike LIKE ?");
+			stmt.setString(1, "%" + BikeId + "%");
+			ResultSet rs = stmt.executeQuery();
 			
 			//execute statement object and return result to ResultSet
-			ResultSet rs = statment.executeQuery("select * from bikes Where bikes.id_Bike LIKE " + BikeId);
+			//ResultSet rs = statment.executeQuery("select * from bikes Where bikes.id_Bike LIKE " + BikeId);
 			while (rs.next())
 			{
 				if(rs.getInt("statusBike") == 1)
@@ -207,7 +210,6 @@ public class ConnectionDB {
 			}
 			//close the connection
 			rs.close();
-			statment.close();
 			con.close();
 		}
 		
@@ -265,5 +267,104 @@ public class ConnectionDB {
 			e.printStackTrace();
 		}
 	}
+    
+    
+    
+    public static ArrayList<Article> listArticles()
+	{
+    	ArrayList<Article> listArticle = new ArrayList<Article>();
+
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+		//create statement object
+		Statement statment = con.createStatement();
+	
+		//execute statement object and return result to ResultSet
+		ResultSet rs = statment.executeQuery("select * from shop");
+		while (rs.next())
+		{
+			int id = rs.getInt("id_Item");
+			String name = rs.getString("name_Item");
+			listArticle.add(new Article(id, name));
+		}
+	
+		//close the connection
+		rs.close();
+		statment.close();
+		con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return listArticle;
+	}
+    
+    public static ArrayList<Article> searchArticle(String Article)
+    {
+    	ArrayList<Article> listArticleSearch = new ArrayList<Article>();
+
+		//open a connection to database
+		try(Connection con = DriverManager.getConnection(URL,user, pwd))
+		{
+			//create statement object
+			System.out.println(Article);
+			PreparedStatement statmt = con.prepareStatement("SELECT * FROM shop WHERE shop.id_Item LIKE ? OR shop.name_Item LIKE ?");
+			statmt.setString(1, "%" + Article + "%");
+			statmt.setString(2, "%" + Article + "%");
+			ResultSet result = statmt.executeQuery();
+			
+			//execute statement object and return result to ResultSet
+			while (result.next())
+			{
+				int id = result.getInt("id_Item");
+				String name = result.getString("name_Item");
+				System.out.println(id + "  " + name);
+				listArticleSearch.add(new Article(id, name));
+			}
+			//close the connection
+			result.close();
+			con.close();
+		}
+		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listArticleSearch;
+	}
+    
+    public static void deleteArticle(int ID)
+    {	
+		try (Connection connection = DriverManager.getConnection(URL, user, pwd)){				
+				
+				Statement s = connection.createStatement();
+				
+				String sql = "DELETE FROM shop WHERE shop.id_Item = " + ID;
+				int updateCount = s.executeUpdate(sql);				
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+    
+    public static void addArticle(int id, String name) {
+		
+    	try (Connection connection = DriverManager.getConnection(URL,user, pwd)){
+    				
+    		PreparedStatement statmt = connection.prepareStatement("INSERT INTO shop VALUES ( ?, ?)");
+			statmt.setInt(1, id);
+			statmt.setString(2, name);
+			statmt.execute();
+			
+    		
+    		/*Statement s = connection.createStatement();
+    		String sql = "INSERT INTO shop VALUES (" + id + ", " + name + ")";
+    		int updateCount = s.executeUpdate(sql);
+    		*/		
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+    	}
    
 }

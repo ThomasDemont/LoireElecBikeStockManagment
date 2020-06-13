@@ -38,14 +38,6 @@ public class FrameRent extends JFrame{
 	private JButton btnAdd;
 	private JButton btnRemove;
 	private JButton btnChangeStatus;
-	
-	private static final String  driver = "jdbc:mysql://localhost:3306/loireelecbikestockmanagament";//hildur.ucn.dk  jdbc:sqlserver://
-	private static String  userName = "root";//dmai0919_1081946
-    private static String password = "";//Password1!
-    
-    
-    private static final String URL =  driver + userName + password;
-	
 
 	/**
 	 * Launch the application
@@ -104,10 +96,11 @@ public class FrameRent extends JFrame{
 		gbc_searchField.insets = new Insets(0, 0, 5, 5);
 		gbc_searchField.gridx = 0;
 		gbc_searchField.gridy = 1;
+		searchField.setText("Search");
 		frameRent.getContentPane().add(searchField, gbc_searchField);
 		searchField.setColumns(10);
 		
-		JButton btnUpdateList = new JButton("Update List");
+		JButton btnUpdateList = new JButton("Update UI");
 		GridBagConstraints gbc_btnUpdateList = new GridBagConstraints();
 		gbc_btnUpdateList.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUpdateList.gridx = 1;
@@ -214,7 +207,8 @@ public class FrameRent extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-
+				int listBikeSize = ConnectionDB.listBikes().size();
+				total.setText(" Total bikes : " + Integer.toString(listBikeSize));
 				bikeList.setModel(updatebikeList(ConnectionDB.listBikes()));
 				statusBikeList.setModel(updatestatusBikeList(ConnectionDB.listBikesStatus()));					
 			}
@@ -246,8 +240,6 @@ public class FrameRent extends JFrame{
 			{
 				String textSearchField = new String("");
 				textSearchField = searchField.getText();
-				ConnectionDB.searchBike(textSearchField);
-				System.out.println(textSearchField);
 				bikeList.setModel(updatebikeList(ConnectionDB.searchBike(textSearchField)));
 				statusBikeList.setModel(updatestatusBikeList(ConnectionDB.searchBikeStatus(textSearchField)));
 			}
