@@ -1,0 +1,33 @@
+CREATE DATABASE LoireElecBikeStockManagament;
+
+	CREATE TABLE bikes (
+        id_Bike INT PRIMARY KEY,
+        statusBike BOOLEAN
+        );
+
+        INSERT INTO bikes VALUES (500135, true);
+        INSERT INTO bikes VALUES (499225, true);
+        INSERT INTO bikes VALUES (168156, true);
+        INSERT INTO bikes VALUES (157386, true);
+        INSERT INTO bikes VALUES (349386, true);
+        INSERT INTO bikes VALUES (592682, true);
+        INSERT INTO bikes VALUES (549284, true);
+        INSERT INTO bikes VALUES (578349, true);
+        INSERT INTO bikes VALUES (252376, false);
+        INSERT INTO bikes VALUES (123586, false);
+
+    CREATE TABLE shop (
+        id_Item INT PRIMARY KEY,
+        name_Item varchar(255)
+        );
+
+        INSERT INTO shop VALUES (142672568, "name1");
+        INSERT INTO shop VALUES (256855995, "name2");
+        INSERT INTO shop VALUES (013566596, "name3");
+        INSERT INTO shop VALUES (321699560, "name4");
+        INSERT INTO shop VALUES (368684397, "name5");
+        INSERT INTO shop VALUES (326492681, "name6");
+        INSERT INTO shop VALUES (846931567, "name7");
+        INSERT INTO shop VALUES (246853216, "name8");
+        INSERT INTO shop VALUES (039558955, "name9");
+        
