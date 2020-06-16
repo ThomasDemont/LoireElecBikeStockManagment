@@ -12,6 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+
+/**
+ * Class managing  the frame to add an article
+ */
 public class FrameAddArticle extends JFrame {
 
 	private JPanel contentPane;

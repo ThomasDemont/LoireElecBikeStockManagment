@@ -1,3 +1,6 @@
+/**
+ * This class allows for a easy management of the article data
+ */
 public class Article 
     {
     	int idArticle;

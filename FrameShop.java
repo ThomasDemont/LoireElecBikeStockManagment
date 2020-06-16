@@ -19,6 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.JComboBox;
 
+
+/**
+ * Class managing  the frame handling the Shop management
+ */
 public class FrameShop extends JFrame {
 
 	private JPanel contentPane;
@@ -97,7 +101,7 @@ public class FrameShop extends JFrame {
 		gbc_btnRemove.gridy = 3;
 		contentPane.add(btnRemove, gbc_btnRemove);
 		
-		JButton btnUpdateUI = new JButton("Reset UI");
+		JButton btnUpdateUI = new JButton("Refresh UI");
 		GridBagConstraints gbc_btnUpdateUI = new GridBagConstraints();
 		gbc_btnUpdateUI.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUpdateUI.gridx = 0;
@@ -129,9 +133,6 @@ public class FrameShop extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(e.getActionCommand() == "Remove Article")
-				{
-					//ArrayList<Article> listOfArticle = ConnectionDB.listArticles();
 					Article articleToRemove;
 					articleToRemove = listOfArticle.get(listArticle.getSelectedIndex());
 					int idToRemove = articleToRemove.idArticle;
@@ -143,7 +144,6 @@ public class FrameShop extends JFrame {
 						listModel.addElement(listOfArticleAfterRemoval.get(i));
 					}
 					listArticle.setModel(listModel);
-				}
 			}
 		});
 		btnUpdateUI.addActionListener(new ActionListener()
@@ -151,8 +151,6 @@ public class FrameShop extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(e.getActionCommand() == "Reset UI")
-				{
 					DefaultListModel listModel = new DefaultListModel();
 					ArrayList<Article> listOfArticleAfterRemoval = ConnectionDB.listArticles();
 					for(int i = 0; i < listOfArticleAfterRemoval.size(); i++)
@@ -160,7 +158,6 @@ public class FrameShop extends JFrame {
 						listModel.addElement(listOfArticleAfterRemoval.get(i));
 					}
 					listArticle.setModel(listModel);
-				}
 			}	
 		});
 		searchFieldShop.addActionListener(new ActionListener()
@@ -198,7 +195,6 @@ public class FrameShop extends JFrame {
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//System.out.println("ActionPerformed");
 			
 			/**
 			 * Differentiation for events is done with the text contained in the buttons

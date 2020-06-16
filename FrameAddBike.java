@@ -14,6 +14,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+
+/**
+ * Class managing  the frame to add a bike
+ */
 public class FrameAddBike extends JFrame {
 
 	private JPanel contentPane;

@@ -23,6 +23,10 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.awt.event.ItemEvent;
 
+
+/**
+ * Class managing  the frame handling the bike management
+ */
 public class FrameRent extends JFrame{
 
 	private JFrame frameRent;
@@ -158,7 +162,6 @@ public class FrameRent extends JFrame{
 		
 		JButton btnAdd = new JButton("Add bike");
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.anchor = GridBagConstraints.WEST;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
 		gbc_btnAdd.gridx = 0;
 		gbc_btnAdd.gridy = 4;
@@ -166,7 +169,6 @@ public class FrameRent extends JFrame{
 			
 		JButton btnRemove = new JButton("Remove bike");
 		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
-		gbc_btnRemove.anchor = GridBagConstraints.WEST;
 		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRemove.gridx = 0;
 		gbc_btnRemove.gridy = 5;
@@ -174,7 +176,6 @@ public class FrameRent extends JFrame{
 		
 		JButton btnChangeStatus = new JButton("Change bike Status");
 		GridBagConstraints gbc_btnChangeStatus = new GridBagConstraints();
-		gbc_btnChangeStatus.anchor = GridBagConstraints.WEST;
 		gbc_btnChangeStatus.insets = new Insets(0, 0, 0, 6);
 		gbc_btnChangeStatus.gridx = 0;
 		gbc_btnChangeStatus.gridy = 6;
@@ -302,34 +303,7 @@ public class FrameRent extends JFrame{
 			{
 				FrameAddBike frameAddBike = new FrameAddBike();
 				frameAddBike.setVisible(true);
-			}
-			/*if(e.getActionCommand() == "Update List")
-			{
-				bikeList.setModel(updatebikeList());
-				statusBikeList.setModel(updatestatusBikeList());
-			}
-			if(e.getActionCommand() == "Remove bike")
-			{
-				ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
-				String idToRemove = listOfBike.get(bikeList.getSelectedIndex());
-				ConnectionDB.deleteBikes(URL, userName, password, idToRemove);
-				bikeList.setModel(updatebikeList());
-				statusBikeList.setModel(updatestatusBikeList());
-			}
-			if(e.getActionCommand() == "Change bike Status")
-			{
-				ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
-				String idToChange = listOfBike.get(bikeList.getSelectedIndex());
-				if(statusBikeList.getModel().getElementAt(bikeList.getSelectedIndex()) == "Available")
-				{
-					ConnectionDB.changeBikesStatus(URL, userName, password, idToChange, "Taken");
-				}
-				else
-				{
-					ConnectionDB.changeBikesStatus(URL, userName, password, idToChange, "Available");
-				}
-				updateRentUi();
-			}*/			
+			}	
 		}
 		
 	}
@@ -337,18 +311,6 @@ public class FrameRent extends JFrame{
 	/**
 	 * Methods to update the UI
 	 */
-	/*private void updateRentUi()
-	{
-		DefaultListModel listModel = new DefaultListModel();
-		ArrayList<String> listOfBike = ConnectionDB.listBikes(URL, userName, password);
-		for(int i = 0; i < listOfBike.size(); i++)
-		{
-			listModel.addElement(listOfBike.get(i));
-		}
-		bikeList.setModel(listModel);
-		total.setText(" Total bikes : " + listOfBike.size());
-	}*/
-	
 	private DefaultListModel updatebikeList(ArrayList<String> bikeList)
 	{
 		DefaultListModel listModel = new DefaultListModel();
